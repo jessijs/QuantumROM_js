@@ -198,6 +198,7 @@ DOWNLOAD_FIRMWARE() {
     echo -e "Firmware Size: ${file_size} MB"
 }
 
+
 EXTRACT_FIRMWARE() {
     echo " "
 
@@ -590,82 +591,82 @@ INSTALL_FRAMEWORK() {
 }
 
 
-DECOMPILE() {
-    echo " "
+# DECOMPILE() {
+#     echo " "
 
-    if [ "$#" -ne 4 ]; then
-        echo -e "Usage: DECOMPILE <APKTOOL_JAR_DIR> <FRAMEWORK_DIR> <FILE> <DECOMPILE_DIR>"
-        return 1
-    fi
+#     if [ "$#" -ne 4 ]; then
+#         echo -e "Usage: DECOMPILE <APKTOOL_JAR_DIR> <FRAMEWORK_DIR> <FILE> <DECOMPILE_DIR>"
+#         return 1
+#     fi
 
-    # apktool version-3
-	# d = decompile
-	# --force = force delete target decompile directory before decompile
-	# --no-src = don't decompile dex file
-	# --no-res = don't decode resources
-	# --match-original = decompile everything as original
-	# --frame-path = framework path
-	# -o = decompile directory
-	local APKTOOL="$1"
-	local FRAMEWORK_DIR="$2"
-    local FILE="$3"
-    local DECOMPILE_DIR="$4"
-    local BASENAME="$(basename "${FILE%.*}")"
-    local OUT="$DECOMPILE_DIR/$BASENAME"
+#     # apktool version-3
+# 	# d = decompile
+# 	# --force = force delete target decompile directory before decompile
+# 	# --no-src = don't decompile dex file
+# 	# --no-res = don't decode resources
+# 	# --match-original = decompile everything as original
+# 	# --frame-path = framework path
+# 	# -o = decompile directory
+# 	local APKTOOL="$1"
+# 	local FRAMEWORK_DIR="$2"
+#     local FILE="$3"
+#     local DECOMPILE_DIR="$4"
+#     local BASENAME="$(basename "${FILE%.*}")"
+#     local OUT="$DECOMPILE_DIR/$BASENAME"
 
-    echo -e "Decompiling: $FILE"
+#     echo -e "Decompiling: $FILE"
 
-	if [ ! -f "$FILE" ]; then
-        echo -e "- File not found: $FILE"
-        return 1
-    fi
+# 	if [ ! -f "$FILE" ]; then
+#         echo -e "- File not found: $FILE"
+#         return 1
+#     fi
 
-	rm -rf "$OUT"
-    java -jar "$APKTOOL" d --force --frame-path "$FRAMEWORK_DIR" --match-original "$FILE" -o "$OUT"
-}
+# 	rm -rf "$OUT"
+#     java -jar "$APKTOOL" d --force --frame-path "$FRAMEWORK_DIR" --match-original "$FILE" -o "$OUT"
+# }
 
 
-RECOMPILE() {
-    echo " "
+# RECOMPILE() {
+#     echo " "
 
-	if [ "$#" -ne 4 ]; then
-        echo -e "Usage: ${FUNCNAME[0]} <APKTOOL_JAR_DIR> <FRAMEWORK_DIR> <DECOMPILED_DIR> <RECOMPILE_DIR>"
-        return 1
-    fi
+# 	if [ "$#" -ne 4 ]; then
+#         echo -e "Usage: ${FUNCNAME[0]} <APKTOOL_JAR_DIR> <FRAMEWORK_DIR> <DECOMPILED_DIR> <RECOMPILE_DIR>"
+#         return 1
+#     fi
 
-    # apktool version-3
-	# b = recompile
-	# --copy-original = use original manifest
-	# --frame-path = framework path
-	# -o = output /recompile file directory with filename
-	local APKTOOL="$1"
-	local FRAMEWORK_DIR="$2"
-	local DECOMPILED_DIR="$3"
-    local RECOMPILE_DIR="$4"
+#     # apktool version-3
+# 	# b = recompile
+# 	# --copy-original = use original manifest
+# 	# --frame-path = framework path
+# 	# -o = output /recompile file directory with filename
+# 	local APKTOOL="$1"
+# 	local FRAMEWORK_DIR="$2"
+# 	local DECOMPILED_DIR="$3"
+#     local RECOMPILE_DIR="$4"
 	
-	echo -e "Recompiling: $DECOMPILED_DIR"
+# 	echo -e "Recompiling: $DECOMPILED_DIR"
 
-	if [ ! -d "$DECOMPILED_DIR" ]; then
-        echo "- Directory not found: $DECOMPILED_DIR"
-        return 1
-    fi
+# 	if [ ! -d "$DECOMPILED_DIR" ]; then
+#         echo "- Directory not found: $DECOMPILED_DIR"
+#         return 1
+#     fi
 
-    local org_file_name=$(awk '/^apkFileName:/ {print $2}' "$DECOMPILED_DIR/apktool.yml")
-    local name="${org_file_name%.*}"
-    local ext="${org_file_name##*.}"
-    local built_file="$RECOMPILE_DIR/${name}.$ext"
+#     local org_file_name=$(awk '/^apkFileName:/ {print $2}' "$DECOMPILED_DIR/apktool.yml")
+#     local name="${org_file_name%.*}"
+#     local ext="${org_file_name##*.}"
+#     local built_file="$RECOMPILE_DIR/${name}.$ext"
 
-    java -jar "$APKTOOL" b "$DECOMPILED_DIR" --copy-original --frame-path "$FRAMEWORK_DIR" -o "$built_file"
-    rm -rf "$DECOMPILED_DIR"
+#     java -jar "$APKTOOL" b "$DECOMPILED_DIR" --copy-original --frame-path "$FRAMEWORK_DIR" -o "$built_file"
+#     rm -rf "$DECOMPILED_DIR"
 
-	# Zipalign
-	# echo " "
-	# if [[ "$ext" == "apk" ]]; then
-	    # echo -e "Zipaligning: $built_file to $final_file"
-        # zipalign -v 4 "$built_file" "$final_file" >/dev/null 2>&1
-		# rm -rf "$built_file"
-    # fi
-}
+# 	# Zipalign
+# 	# echo " "
+# 	# if [[ "$ext" == "apk" ]]; then
+# 	    # echo -e "Zipaligning: $built_file to $final_file"
+#         # zipalign -v 4 "$built_file" "$final_file" >/dev/null 2>&1
+# 		# rm -rf "$built_file"
+#     # fi
+# }
 
 
 REPLACE_SMALI_METHOD() {
@@ -735,99 +736,99 @@ HEX_PATCH() {
 }
 
 
-PATCH_FLAG_SECURE() {
-	echo " "
+# PATCH_FLAG_SECURE() {
+# 	echo " "
 
-	if [ "$#" -ne 2 ]; then
-        echo -e "Usage: ${FUNCNAME[0]} <EXTRACTED_FIRMWARE_DIRECTORY> <EXTRACTED_SERVICES_DIRECTORY>"
-        return 1
-    fi
+# 	if [ "$#" -ne 2 ]; then
+#         echo -e "Usage: ${FUNCNAME[0]} <EXTRACTED_FIRMWARE_DIRECTORY> <EXTRACTED_SERVICES_DIRECTORY>"
+#         return 1
+#     fi
 
-	# https://github.com/ShaDisNX255/NcX_Stock/commit/c2cc85818df4fe040b4f89ca8f9b78e939b211b4
-    # https://forum.xda-developers.com/t/mods-samsung-not-android-mods-collection-exynos.3772017/post-86811691
-	# https://xdaforums.com/t/module-smalipatcherex-1-2-2.4627905/
+# 	# https://github.com/ShaDisNX255/NcX_Stock/commit/c2cc85818df4fe040b4f89ca8f9b78e939b211b4
+#     # https://forum.xda-developers.com/t/mods-samsung-not-android-mods-collection-exynos.3772017/post-86811691
+# 	# https://xdaforums.com/t/module-smalipatcherex-1-2-2.4627905/
 
-    local FILE_1 FILE_2 FILE_3
+#     local FILE_1 FILE_2 FILE_3
 
-    local REPLACE_BODY_1='
-    .locals 1
+#     local REPLACE_BODY_1='
+#     .locals 1
 
-    const/4 v0, 0x0
+#     const/4 v0, 0x0
 
-    return v0
-    '
+#     return v0
+#     '
 
-    local REPLACE_BODY_2='
-    .locals 1
+#     local REPLACE_BODY_2='
+#     .locals 1
 
-    invoke-static {}, Ljava/util/Collections;->emptyList()Ljava/util/List;
-    move-result-object v0
-    return-object v0
-    '
+#     invoke-static {}, Ljava/util/Collections;->emptyList()Ljava/util/List;
+#     move-result-object v0
+#     return-object v0
+#     '
 
-	echo -e "Patching flag secure."
+# 	echo -e "Patching flag secure."
 
-    local EXTRACTED_FIRM_DIR="$1"
-	local WORK_DIR="$2"
+#     local EXTRACTED_FIRM_DIR="$1"
+# 	local WORK_DIR="$2"
 
-	if [ ! -d "$WORK_DIR" ]; then
-        echo "- Directory not found: $WORK_DIR"
-        return 1
-    fi
+# 	if [ ! -d "$WORK_DIR" ]; then
+#         echo "- Directory not found: $WORK_DIR"
+#         return 1
+#     fi
 
-	local ANDROID_VERSION=$(GET_PROP "$EXTRACTED_FIRM_DIR" "system" "ro.system.build.version.release")
+# 	local ANDROID_VERSION=$(GET_PROP "$EXTRACTED_FIRM_DIR" "system" "ro.system.build.version.release")
 
-	echo "Android version: $ANDROID_VERSION"
+# 	echo "Android version: $ANDROID_VERSION"
 
-	case "$ANDROID_VERSION" in
-	    10)
-            FILE_3="${WORK_DIR}/smali/com/android/server/devicepolicy/DevicePolicyManagerService.smali"
-	        METHOD_NAME_1=".method public getScreenCaptureDisabled(Landroid/content/ComponentName;I)Z"
-            ;;
-        11)
-            FILE_1="${WORK_DIR}/smali_classes2/com/android/server/wm/WindowState.smali"
-            METHOD_NAME_1=".method isSecureLocked()Z"
-            ;;
-        12)
-            FILE_1="${WORK_DIR2}/smali_classes3/com/android/server/wm/WindowState.smali"
-            METHOD_NAME_1=".method isSecureLocked()Z"
-            ;;
-        13)
-            FILE_1="${WORK_DIR}/smali_classes3/com/android/server/wm/WindowState.smali"
-            METHOD_NAME_1=".method public isSecureLocked()Z"
-            ;;
-        14)
-            FILE_1="${WORK_DIR}/smali_classes3/com/android/server/wm/WindowState.smali"
-            METHOD_NAME_1=".method public isSecureLocked()Z"
-			FILE_2="${WORK_DIR}/smali_classes3/com/android/server/wm/WindowManagerService.smali"
-            METHOD_NAME_2=".method public notifyScreenshotListeners(I)Ljava/util/List;"
-            ;;
-        15|16|17)
-            FILE_1="${WORK_DIR}/smali_classes2/com/android/server/wm/WindowState.smali"
-            METHOD_NAME_1=".method public final isSecureLocked()Z"
-			FILE_2="${WORK_DIR}/smali_classes2/com/android/server/wm/WindowManagerService.smali"
-            METHOD_NAME_2=".method public final notifyScreenshotListeners(I)Ljava/util/List;"
-			FILE_3="${WORK_DIR}/smali/com/android/server/devicepolicy/DevicePolicyManagerService.smali"
-			METHOD_NAME_3=".method public final getScreenCaptureDisabled(Landroid/content/ComponentName;IZ)Z"
-            ;;
-        *)
-            echo "- Unsupported Android version: $ANDROID_VERSION"
-            return 1
-            ;;
-    esac
+# 	case "$ANDROID_VERSION" in
+# 	    10)
+#             FILE_3="${WORK_DIR}/smali/com/android/server/devicepolicy/DevicePolicyManagerService.smali"
+# 	        METHOD_NAME_1=".method public getScreenCaptureDisabled(Landroid/content/ComponentName;I)Z"
+#             ;;
+#         11)
+#             FILE_1="${WORK_DIR}/smali_classes2/com/android/server/wm/WindowState.smali"
+#             METHOD_NAME_1=".method isSecureLocked()Z"
+#             ;;
+#         12)
+#             FILE_1="${WORK_DIR2}/smali_classes3/com/android/server/wm/WindowState.smali"
+#             METHOD_NAME_1=".method isSecureLocked()Z"
+#             ;;
+#         13)
+#             FILE_1="${WORK_DIR}/smali_classes3/com/android/server/wm/WindowState.smali"
+#             METHOD_NAME_1=".method public isSecureLocked()Z"
+#             ;;
+#         14)
+#             FILE_1="${WORK_DIR}/smali_classes3/com/android/server/wm/WindowState.smali"
+#             METHOD_NAME_1=".method public isSecureLocked()Z"
+# 			FILE_2="${WORK_DIR}/smali_classes3/com/android/server/wm/WindowManagerService.smali"
+#             METHOD_NAME_2=".method public notifyScreenshotListeners(I)Ljava/util/List;"
+#             ;;
+#         15|16|17)
+#             FILE_1="${WORK_DIR}/smali_classes2/com/android/server/wm/WindowState.smali"
+#             METHOD_NAME_1=".method public final isSecureLocked()Z"
+# 			FILE_2="${WORK_DIR}/smali_classes2/com/android/server/wm/WindowManagerService.smali"
+#             METHOD_NAME_2=".method public final notifyScreenshotListeners(I)Ljava/util/List;"
+# 			FILE_3="${WORK_DIR}/smali/com/android/server/devicepolicy/DevicePolicyManagerService.smali"
+# 			METHOD_NAME_3=".method public final getScreenCaptureDisabled(Landroid/content/ComponentName;IZ)Z"
+#             ;;
+#         *)
+#             echo "- Unsupported Android version: $ANDROID_VERSION"
+#             return 1
+#             ;;
+#     esac
 
-    if [[ -v FILE_1 ]]; then
-        REPLACE_SMALI_METHOD "$FILE_1" "$METHOD_NAME_1" "$REPLACE_BODY_1"
-    fi
+#     if [[ -v FILE_1 ]]; then
+#         REPLACE_SMALI_METHOD "$FILE_1" "$METHOD_NAME_1" "$REPLACE_BODY_1"
+#     fi
 
-    if [[ -v FILE_2 ]]; then
-        REPLACE_SMALI_METHOD "$FILE_2" "$METHOD_NAME_2" "$REPLACE_BODY_2"
-    fi
+#     if [[ -v FILE_2 ]]; then
+#         REPLACE_SMALI_METHOD "$FILE_2" "$METHOD_NAME_2" "$REPLACE_BODY_2"
+#     fi
 
-	if [[ -v FILE_3 ]]; then
-        REPLACE_SMALI_METHOD "$FILE_3" "$METHOD_NAME_3" "$REPLACE_BODY_1"
-    fi
-}
+# 	if [[ -v FILE_3 ]]; then
+#         REPLACE_SMALI_METHOD "$FILE_3" "$METHOD_NAME_3" "$REPLACE_BODY_1"
+#     fi
+# }
 
 
 PATCH_SECURE_FOLDER() {
@@ -979,57 +980,57 @@ UPDATE_SDHMS() {
 }
 
 
-PATCH_SSRM() {
-    echo " "
+# PATCH_SSRM() {
+#     echo " "
 
-    if [ "$#" -ne 1 ]; then
-        echo -e "Usage: ${FUNCNAME[0]} <EXTRACTED_SSRM_DIRECTORY>"
-        return 1
-    fi
+#     if [ "$#" -ne 1 ]; then
+#         echo -e "Usage: ${FUNCNAME[0]} <EXTRACTED_SSRM_DIRECTORY>"
+#         return 1
+#     fi
 
-    local SSRM_DIR="$1"
-    local FILE="$SSRM_DIR/smali/com/android/server/ssrm/Feature.smali"
+#     local SSRM_DIR="$1"
+#     local FILE="$SSRM_DIR/smali/com/android/server/ssrm/Feature.smali"
 
-    echo -e "Patching SSRM."
-    echo -e "- Patching: $FILE"
+#     echo -e "Patching SSRM."
+#     echo -e "- Patching: $FILE"
 
-	if [ ! -f "$FILE" ]; then
-	    echo "- File name not found: $FILE"
-		return
-	fi
+# 	if [ ! -f "$FILE" ]; then
+# 	    echo "- File name not found: $FILE"
+# 		return
+# 	fi
 
-    if FOUND=$(grep -E 'const-string [vp][0-9]+, "dvfs_policy_.*_xx"' "$FILE"); then
-        echo "- Found DVFS policy: $FOUND"
+#     if FOUND=$(grep -E 'const-string [vp][0-9]+, "dvfs_policy_.*_xx"' "$FILE"); then
+#         echo "- Found DVFS policy: $FOUND"
 
-        if [ -n "$STOCK_DVFS_FILENAME" ]; then
-            sed -i -E \
-            's|(const-string [vp][0-9]+, ")dvfs_policy_[^"]*_[^"]*(")|\1'"$STOCK_DVFS_FILENAME"'\2|' \
-            "$FILE"
+#         if [ -n "$STOCK_DVFS_FILENAME" ]; then
+#             sed -i -E \
+#             's|(const-string [vp][0-9]+, ")dvfs_policy_[^"]*_[^"]*(")|\1'"$STOCK_DVFS_FILENAME"'\2|' \
+#             "$FILE"
 
-            echo "- DVFS policy file name replaced to: ${STOCK_DVFS_FILENAME}"
-        else
-            echo "- STOCK_DVFS_FILENAME is empty. Skipping replacement."
-        fi
-    else
-        echo "- DVFS policy file name not found."
-    fi
+#             echo "- DVFS policy file name replaced to: ${STOCK_DVFS_FILENAME}"
+#         else
+#             echo "- STOCK_DVFS_FILENAME is empty. Skipping replacement."
+#         fi
+#     else
+#         echo "- DVFS policy file name not found."
+#     fi
 
-    if FOUND=$(grep -E 'const-string [vp][0-9]+, "siop_[^"]*_[^"]*"' "$FILE"); then
-        echo "- Found SIOP policy: $FOUND"
+#     if FOUND=$(grep -E 'const-string [vp][0-9]+, "siop_[^"]*_[^"]*"' "$FILE"); then
+#         echo "- Found SIOP policy: $FOUND"
 
-        if [ -n "$STOCK_SIOP_POLICY_FILENAME" ]; then
-            sed -i -E \
-            's|(const-string [vp][0-9]+, ")siop_[^"]*_[^"]*(")|\1'"$STOCK_SIOP_POLICY_FILENAME"'\2|' \
-            "$FILE"
+#         if [ -n "$STOCK_SIOP_POLICY_FILENAME" ]; then
+#             sed -i -E \
+#             's|(const-string [vp][0-9]+, ")siop_[^"]*_[^"]*(")|\1'"$STOCK_SIOP_POLICY_FILENAME"'\2|' \
+#             "$FILE"
 
-            echo "- SIOP policy file name replaced to: ${STOCK_SIOP_POLICY_FILENAME}"
-        else
-            echo "- STOCK_SIOP_POLICY_FILENAME is empty. Skipping replacement."
-        fi
-    else
-        echo "- SIOP policy file name not found."
-    fi
-}
+#             echo "- SIOP policy file name replaced to: ${STOCK_SIOP_POLICY_FILENAME}"
+#         else
+#             echo "- STOCK_SIOP_POLICY_FILENAME is empty. Skipping replacement."
+#         fi
+#     else
+#         echo "- SIOP policy file name not found."
+#     fi
+# }
 
 
 PATCH_BT_LIB() {
@@ -1337,7 +1338,7 @@ PATCH_SELINUX() {
 
     echo -e "Patching selinux."
 
-	UNSUPPORTED_SELINUX=("audiomirroring" "fabriccrypto" "hal_dsms_default" "qb_id_prop" "hal_dsms_service" "proc_compaction_proactiveness" "sbauth" "ker_app" "kpp_app" "kpp_data" "attiqi_app" "kpoc_charger" "sec_diag" "mosey_app" "vendor_smcinvoke_device" "perf_prop" "uwb_regulation_skip_prop")
+	UNSUPPORTED_SELINUX=("audiomirroring" "fabriccrypto" "hal_dsms_default" "qb_id_prop" "hal_dsms_service" "proc_compaction_proactiveness" "sbauth" "ker_app" "kpp_app" "kpp_data" "attiqi_app" "kpoc_charger" "sec_diag" "mosey_app" "vendor_smcinvoke_device")
 
     if [ -d "${EXTRACTED_FIRM_DIR}/system" ]; then
 	    echo "- Patching selinux for system"
@@ -1446,9 +1447,9 @@ APPLY_CUSTOM_FLOATING_FEATURE() {
     #========== COMMON ==========#
     UPDATE_FLOATING_FEATURE "$TARGET_ROM_FLOATING_FEATURE" "SEC_FLOATING_FEATURE_COMMON_CONFIG_SEP_CATEGORY" "sep_basic"
 
-    #============= AI ==========#
-    sed -i '/SEC_FLOATING_FEATURE_COMMON_DISABLE_NATIVE_AI/d' "$TARGET_ROM_FLOATING_FEATURE"
-    UPDATE_FLOATING_FEATURE "$TARGET_ROM_FLOATING_FEATURE" "SEC_FLOATING_FEATURE_VISION_SUPPORT_AI_MY_FAVORITE_CONTENTS" "TRUE"
+    # #============= AI ==========#
+    # sed -i '/SEC_FLOATING_FEATURE_COMMON_DISABLE_NATIVE_AI/d' "$TARGET_ROM_FLOATING_FEATURE"
+    # UPDATE_FLOATING_FEATURE "$TARGET_ROM_FLOATING_FEATURE" "SEC_FLOATING_FEATURE_VISION_SUPPORT_AI_MY_FAVORITE_CONTENTS" "TRUE"
 
 	#========== EDGE ==========#
     UPDATE_FLOATING_FEATURE "$TARGET_ROM_FLOATING_FEATURE" "SEC_FLOATING_FEATURE_COMMON_CONFIG_EDGE" "panel"
@@ -1546,6 +1547,10 @@ APPLY_STOCK_ROM_FLOATING_FEATURE() {
     UPDATE_FLOATING_FEATURE "$TARGET_ROM_FLOATING_FEATURE" \
     "SEC_FLOATING_FEATURE_SETTINGS_CONFIG_DEFAULT_FONT_SIZE" \
     "$(GET_FF_VALUE "SEC_FLOATING_FEATURE_SETTINGS_CONFIG_DEFAULT_FONT_SIZE" "$STOCK_ROM_FLOATING_FEATURE")"
+
+    UPDATE_FLOATING_FEATURE "$TARGET_ROM_FLOATING_FEATURE" \
+    "SEC_FLOATING_FEATURE_SETTINGS_CONFIG_FCC_ID" \
+    "$(GET_FF_VALUE "SEC_FLOATING_FEATURE_SETTINGS_CONFIG_FCC_ID" "$STOCK_ROM_FLOATING_FEATURE")"
 
     #========== REFRESH RATE ==========#
     UPDATE_FLOATING_FEATURE "$TARGET_ROM_FLOATING_FEATURE" \
@@ -2048,233 +2053,233 @@ APPLY_JDM_SPECIAL() {
 }
 
 
-ADD_CHINA_SMART_MANAGER() {
-    echo " "
+# ADD_CHINA_SMART_MANAGER() {
+#     echo " "
 
-    if [ "$#" -ne 1 ]; then
-        echo -e "Usage: ${FUNCNAME[0]} <EXTRACTED_FIRM_DIR>"
-        return 1
-    fi
+#     if [ "$#" -ne 1 ]; then
+#         echo -e "Usage: ${FUNCNAME[0]} <EXTRACTED_FIRM_DIR>"
+#         return 1
+#     fi
 
-    local EXTRACTED_FIRM_DIR="$1"
+#     local EXTRACTED_FIRM_DIR="$1"
 
-	echo "Adding China smart manager."
+# 	echo "Adding China smart manager."
 
-	if [ ! -d "${EXTRACTED_FIRM_DIR}/system" ]; then
-        echo "No extracted firmware found."
-        return 1
-    fi
+# 	if [ ! -d "${EXTRACTED_FIRM_DIR}/system" ]; then
+#         echo "No extracted firmware found."
+#         return 1
+#     fi
 
-    local PRODUCT_BRAND=$(GET_PROP "$EXTRACTED_FIRM_DIR" "system" "ro.product.system.brand")
-    local ANDROID_VERSION=$(GET_PROP "$EXTRACTED_FIRM_DIR" "system" "ro.system.build.version.release")
+#     local PRODUCT_BRAND=$(GET_PROP "$EXTRACTED_FIRM_DIR" "system" "ro.product.system.brand")
+#     local ANDROID_VERSION=$(GET_PROP "$EXTRACTED_FIRM_DIR" "system" "ro.system.build.version.release")
 	
-    if [ "$PRODUCT_BRAND" != "samsung" ]; then
-	     echo "- Unsupported Android product: $PRODUCT_BRAND"
-        return 1
-    fi
+#     if [ "$PRODUCT_BRAND" != "samsung" ]; then
+# 	     echo "- Unsupported Android product: $PRODUCT_BRAND"
+#         return 1
+#     fi
 
-    if [[ ! "$ANDROID_VERSION" =~ ^(14|15|16)$ ]]; then
-        echo "- Unsupported Android version: $ANDROID_VERSION"
-        return 1
-    fi
+#     if [[ ! "$ANDROID_VERSION" =~ ^(14|15|16)$ ]]; then
+#         echo "- Unsupported Android version: $ANDROID_VERSION"
+#         return 1
+#     fi
 
-	if [ -f "${EXTRACTED_FIRM_DIR}/system/system/etc/floating_feature.xml" ]; then
-        local TARGET_ROM_FLOATING_FEATURE="${EXTRACTED_FIRM_DIR}/system/system/etc/floating_feature.xml"
-    elif [ -f "${EXTRACTED_FIRM_DIR}/vendor/etc/floating_feature.xml" ]; then
-        local TARGET_ROM_FLOATING_FEATURE="${EXTRACTED_FIRM_DIR}/vendor/etc/floating_feature.xml"
-    else
-        echo "- Error: floating_feature.xml not found!"
-        return 1
-    fi
+# 	if [ -f "${EXTRACTED_FIRM_DIR}/system/system/etc/floating_feature.xml" ]; then
+#         local TARGET_ROM_FLOATING_FEATURE="${EXTRACTED_FIRM_DIR}/system/system/etc/floating_feature.xml"
+#     elif [ -f "${EXTRACTED_FIRM_DIR}/vendor/etc/floating_feature.xml" ]; then
+#         local TARGET_ROM_FLOATING_FEATURE="${EXTRACTED_FIRM_DIR}/vendor/etc/floating_feature.xml"
+#     else
+#         echo "- Error: floating_feature.xml not found!"
+#         return 1
+#     fi
 
-    # ================= SMART MANAGER =================
-	if [ ! -d "${EXTRACTED_FIRM_DIR}/system/system/priv-app/SmartManagerCN" ] && \
-        [ ! -f "$(pwd)/QuantumROM/Mods/Apps/Samsung_SmartManagerCN_Android_${ANDROID_VERSION}.zip" ]; then
+#     # ================= SMART MANAGER =================
+# 	if [ ! -d "${EXTRACTED_FIRM_DIR}/system/system/priv-app/SmartManagerCN" ] && \
+#         [ ! -f "$(pwd)/QuantumROM/Mods/Apps/Samsung_SmartManagerCN_Android_${ANDROID_VERSION}.zip" ]; then
 
-        if curl -fsSL --connect-timeout 5 https://www.google.com >/dev/null; then
-            wget --no-check-certificate \
-                "https://github.com/SN-Abdullah-Al-Noman/Samsung_Special/releases/download/Android_${ANDROID_VERSION}/Samsung_SmartManagerCN_Android_${ANDROID_VERSION}.zip" \
-                -O "$(pwd)/QuantumROM/Mods/Apps/Samsung_SmartManagerCN_Android_${ANDROID_VERSION}.zip"
-        else
-            echo "- No internet connection available. Unable to download: Samsung_SmartManagerCN_Android_${ANDROID_VERSION}.zip"
-            return 1
-        fi
-    fi
+#         if curl -fsSL --connect-timeout 5 https://www.google.com >/dev/null; then
+#             wget --no-check-certificate \
+#                 "https://github.com/SN-Abdullah-Al-Noman/Samsung_Special/releases/download/Android_${ANDROID_VERSION}/Samsung_SmartManagerCN_Android_${ANDROID_VERSION}.zip" \
+#                 -O "$(pwd)/QuantumROM/Mods/Apps/Samsung_SmartManagerCN_Android_${ANDROID_VERSION}.zip"
+#         else
+#             echo "- No internet connection available. Unable to download: Samsung_SmartManagerCN_Android_${ANDROID_VERSION}.zip"
+#             return 1
+#         fi
+#     fi
 
-    if [ ! -d "${EXTRACTED_FIRM_DIR}/system/system/priv-app/SmartManagerCN" ] && \
-        [ -f "$(pwd)/QuantumROM/Mods/Apps/Samsung_SmartManagerCN_Android_${ANDROID_VERSION}.zip" ]; then
+#     if [ ! -d "${EXTRACTED_FIRM_DIR}/system/system/priv-app/SmartManagerCN" ] && \
+#         [ -f "$(pwd)/QuantumROM/Mods/Apps/Samsung_SmartManagerCN_Android_${ANDROID_VERSION}.zip" ]; then
 
-        rm -rf "$(pwd)/QuantumROM/Mods/Apps/Samsung_SmartManagerCN_Android_${ANDROID_VERSION}"
-        unzip -o "$(pwd)/QuantumROM/Mods/Apps/Samsung_SmartManagerCN_Android_${ANDROID_VERSION}.zip" \
-            -d "$(pwd)/QuantumROM/Mods/Apps/Samsung_SmartManagerCN_Android_${ANDROID_VERSION}" >/dev/null 2>&1
+#         rm -rf "$(pwd)/QuantumROM/Mods/Apps/Samsung_SmartManagerCN_Android_${ANDROID_VERSION}"
+#         unzip -o "$(pwd)/QuantumROM/Mods/Apps/Samsung_SmartManagerCN_Android_${ANDROID_VERSION}.zip" \
+#             -d "$(pwd)/QuantumROM/Mods/Apps/Samsung_SmartManagerCN_Android_${ANDROID_VERSION}" >/dev/null 2>&1
 
-        rm -rf "${EXTRACTED_FIRM_DIR}/system/system/priv-app/AppLock"
-        rm -rf "${EXTRACTED_FIRM_DIR}/system/system/priv-app/Firewall"
-        rm -rf "${EXTRACTED_FIRM_DIR}/system/system/priv-app/SmartManager_v5"
-        rm -rf "${EXTRACTED_FIRM_DIR}/system/system/priv-app/SmartManagerCN"
+#         rm -rf "${EXTRACTED_FIRM_DIR}/system/system/priv-app/AppLock"
+#         rm -rf "${EXTRACTED_FIRM_DIR}/system/system/priv-app/Firewall"
+#         rm -rf "${EXTRACTED_FIRM_DIR}/system/system/priv-app/SmartManager_v5"
+#         rm -rf "${EXTRACTED_FIRM_DIR}/system/system/priv-app/SmartManagerCN"
 
-        cp -rfa "$(pwd)/QuantumROM/Mods/Apps/Samsung_SmartManagerCN_Android_${ANDROID_VERSION}/." "${EXTRACTED_FIRM_DIR}/"
+#         cp -rfa "$(pwd)/QuantumROM/Mods/Apps/Samsung_SmartManagerCN_Android_${ANDROID_VERSION}/." "${EXTRACTED_FIRM_DIR}/"
 
-        UPDATE_FLOATING_FEATURE "$TARGET_ROM_FLOATING_FEATURE" \
-            "SEC_FLOATING_FEATURE_SMARTMANAGER_CONFIG_PACKAGE_NAME" \
-            "com.samsung.android.sm_cn"
-    fi
+#         UPDATE_FLOATING_FEATURE "$TARGET_ROM_FLOATING_FEATURE" \
+#             "SEC_FLOATING_FEATURE_SMARTMANAGER_CONFIG_PACKAGE_NAME" \
+#             "com.samsung.android.sm_cn"
+#     fi
 
-    chown -R "$REAL_USER:$REAL_USER" "$EXTRACTED_FIRM_DIR"
-    chmod -R u+rwX "$EXTRACTED_FIRM_DIR"
-}
+#     chown -R "$REAL_USER:$REAL_USER" "$EXTRACTED_FIRM_DIR"
+#     chmod -R u+rwX "$EXTRACTED_FIRM_DIR"
+# }
 
 
-ADD_SAMSUNG_FLAGSHIP_APPS() {
-    echo " "
+# ADD_SAMSUNG_FLAGSHIP_APPS() {
+#     echo " "
 
-    if [ "$#" -ne 1 ]; then
-        echo -e "Usage: ${FUNCNAME[0]} <EXTRACTED_FIRM_DIR>"
-        return 1
-    fi
+#     if [ "$#" -ne 1 ]; then
+#         echo -e "Usage: ${FUNCNAME[0]} <EXTRACTED_FIRM_DIR>"
+#         return 1
+#     fi
 
-    local EXTRACTED_FIRM_DIR="$1"
+#     local EXTRACTED_FIRM_DIR="$1"
 
-	echo -e "Adding samsung full ONEUI apps."
+# 	echo -e "Adding samsung full ONEUI apps."
 
-	if [ ! -d "${EXTRACTED_FIRM_DIR}/system" ]; then
-        echo "No extracted firmware found."
-        return 1
-    fi
+# 	if [ ! -d "${EXTRACTED_FIRM_DIR}/system" ]; then
+#         echo "No extracted firmware found."
+#         return 1
+#     fi
 
-	local PRODUCT_BRAND=$(GET_PROP "$EXTRACTED_FIRM_DIR" "system" "ro.product.system.brand")
-    local ANDROID_VERSION=$(GET_PROP "$EXTRACTED_FIRM_DIR" "system" "ro.system.build.version.release")
+# 	local PRODUCT_BRAND=$(GET_PROP "$EXTRACTED_FIRM_DIR" "system" "ro.product.system.brand")
+#     local ANDROID_VERSION=$(GET_PROP "$EXTRACTED_FIRM_DIR" "system" "ro.system.build.version.release")
 
-	if [ "$PRODUCT_BRAND" != "samsung" ]; then
-        return 1
-    fi
+# 	if [ "$PRODUCT_BRAND" != "samsung" ]; then
+#         return 1
+#     fi
 
-	if [[ ! "$ANDROID_VERSION" =~ ^(14|15|16)$ ]]; then
-        echo "- Unsupported Android version: $ANDROID_VERSION"
-        return 1
-    fi
+# 	if [[ ! "$ANDROID_VERSION" =~ ^(14|15|16)$ ]]; then
+#         echo "- Unsupported Android version: $ANDROID_VERSION"
+#         return 1
+#     fi
 
-	if [ -f "${EXTRACTED_FIRM_DIR}/system/system/etc/floating_feature.xml" ]; then
-        local TARGET_ROM_FLOATING_FEATURE="${EXTRACTED_FIRM_DIR}/system/system/etc/floating_feature.xml"
-    elif [ -f "${EXTRACTED_FIRM_DIR}/vendor/etc/floating_feature.xml" ]; then
-        local TARGET_ROM_FLOATING_FEATURE="${EXTRACTED_FIRM_DIR}/vendor/etc/floating_feature.xml"
-    else
-        echo "- Error: floating_feature.xml not found!"
-		return 1
-    fi
+# 	if [ -f "${EXTRACTED_FIRM_DIR}/system/system/etc/floating_feature.xml" ]; then
+#         local TARGET_ROM_FLOATING_FEATURE="${EXTRACTED_FIRM_DIR}/system/system/etc/floating_feature.xml"
+#     elif [ -f "${EXTRACTED_FIRM_DIR}/vendor/etc/floating_feature.xml" ]; then
+#         local TARGET_ROM_FLOATING_FEATURE="${EXTRACTED_FIRM_DIR}/vendor/etc/floating_feature.xml"
+#     else
+#         echo "- Error: floating_feature.xml not found!"
+# 		return 1
+#     fi
 
-    # ================= PHOTO EDITOR AI FULL =================
-    echo "- Adding Photo editor ai full."
+#     # ================= PHOTO EDITOR AI FULL =================
+#     echo "- Adding Photo editor ai full."
 	
-	if [ ! -d "${EXTRACTED_FIRM_DIR}/system/system/priv-app/PhotoEditor_AIFull" ] && \
-        [ ! -f "$(pwd)/QuantumROM/Mods/Apps/Samsung_PhotoEditor_AIFull_Android_${ANDROID_VERSION}.zip" ]; then
+# 	if [ ! -d "${EXTRACTED_FIRM_DIR}/system/system/priv-app/PhotoEditor_AIFull" ] && \
+#         [ ! -f "$(pwd)/QuantumROM/Mods/Apps/Samsung_PhotoEditor_AIFull_Android_${ANDROID_VERSION}.zip" ]; then
 
-        if curl -fsSL --connect-timeout 5 https://www.google.com >/dev/null; then
-            wget --no-check-certificate \
-                "https://github.com/SN-Abdullah-Al-Noman/Samsung_Special/releases/download/Android_${ANDROID_VERSION}/Samsung_PhotoEditor_AIFull_Android_${ANDROID_VERSION}.zip" \
-                -O "$(pwd)/QuantumROM/Mods/Apps/Samsung_PhotoEditor_AIFull_Android_${ANDROID_VERSION}.zip"
-        else
-            echo "- No internet connection available. Unable to download: Samsung_PhotoEditor_AIFull_Android_${ANDROID_VERSION}.zip"
-            return 1
-        fi
-    fi
+#         if curl -fsSL --connect-timeout 5 https://www.google.com >/dev/null; then
+#             wget --no-check-certificate \
+#                 "https://github.com/SN-Abdullah-Al-Noman/Samsung_Special/releases/download/Android_${ANDROID_VERSION}/Samsung_PhotoEditor_AIFull_Android_${ANDROID_VERSION}.zip" \
+#                 -O "$(pwd)/QuantumROM/Mods/Apps/Samsung_PhotoEditor_AIFull_Android_${ANDROID_VERSION}.zip"
+#         else
+#             echo "- No internet connection available. Unable to download: Samsung_PhotoEditor_AIFull_Android_${ANDROID_VERSION}.zip"
+#             return 1
+#         fi
+#     fi
 
-    if [ ! -d "${EXTRACTED_FIRM_DIR}/system/system/priv-app/PhotoEditor_AIFull" ] && \
-        [ -f "$(pwd)/QuantumROM/Mods/Apps/Samsung_PhotoEditor_AIFull_Android_${ANDROID_VERSION}.zip" ]; then
+#     if [ ! -d "${EXTRACTED_FIRM_DIR}/system/system/priv-app/PhotoEditor_AIFull" ] && \
+#         [ -f "$(pwd)/QuantumROM/Mods/Apps/Samsung_PhotoEditor_AIFull_Android_${ANDROID_VERSION}.zip" ]; then
 
-        rm -rf "$(pwd)/QuantumROM/Mods/Apps/Samsung_PhotoEditor_AIFull_Android_${ANDROID_VERSION}"
+#         rm -rf "$(pwd)/QuantumROM/Mods/Apps/Samsung_PhotoEditor_AIFull_Android_${ANDROID_VERSION}"
 
-        unzip -o "$(pwd)/QuantumROM/Mods/Apps/Samsung_PhotoEditor_AIFull_Android_${ANDROID_VERSION}.zip" \
-            -d "$(pwd)/QuantumROM/Mods/Apps/Samsung_PhotoEditor_AIFull_Android_${ANDROID_VERSION}" >/dev/null 2>&1
+#         unzip -o "$(pwd)/QuantumROM/Mods/Apps/Samsung_PhotoEditor_AIFull_Android_${ANDROID_VERSION}.zip" \
+#             -d "$(pwd)/QuantumROM/Mods/Apps/Samsung_PhotoEditor_AIFull_Android_${ANDROID_VERSION}" >/dev/null 2>&1
 
-        rm -rf "${EXTRACTED_FIRM_DIR}/system/system/etc/ailasso"
-        rm -rf "${EXTRACTED_FIRM_DIR}/system/system/etc/ailassomatting"
-        rm -rf "${EXTRACTED_FIRM_DIR}/system/system/etc/inpainting"
-        rm -rf "${EXTRACTED_FIRM_DIR}/system/system/etc/objectremoval"
-        rm -rf "${EXTRACTED_FIRM_DIR}/system/system/etc/reflectionremoval"
-        rm -rf "${EXTRACTED_FIRM_DIR}/system/system/etc/shadowremoval"
-        rm -rf "${EXTRACTED_FIRM_DIR}/system/system/etc/style_transfer"
-        rm -rf "${EXTRACTED_FIRM_DIR}/system/system/priv-app"/PhotoEditor_*
+#         rm -rf "${EXTRACTED_FIRM_DIR}/system/system/etc/ailasso"
+#         rm -rf "${EXTRACTED_FIRM_DIR}/system/system/etc/ailassomatting"
+#         rm -rf "${EXTRACTED_FIRM_DIR}/system/system/etc/inpainting"
+#         rm -rf "${EXTRACTED_FIRM_DIR}/system/system/etc/objectremoval"
+#         rm -rf "${EXTRACTED_FIRM_DIR}/system/system/etc/reflectionremoval"
+#         rm -rf "${EXTRACTED_FIRM_DIR}/system/system/etc/shadowremoval"
+#         rm -rf "${EXTRACTED_FIRM_DIR}/system/system/etc/style_transfer"
+#         rm -rf "${EXTRACTED_FIRM_DIR}/system/system/priv-app"/PhotoEditor_*
 
-	    #========== GENAI ==========#
-		if [ -f "$TARGET_ROM_FLOATING_FEATURE" ]; then
-            UPDATE_FLOATING_FEATURE "$TARGET_ROM_FLOATING_FEATURE" "SEC_FLOATING_FEATURE_GENAI_SUPPORT_IMAGE_CLIPPER" "TRUE"
-            UPDATE_FLOATING_FEATURE "$TARGET_ROM_FLOATING_FEATURE" "SEC_FLOATING_FEATURE_GENAI_SUPPORT_OBJECT_ERASER" "TRUE"
-            UPDATE_FLOATING_FEATURE "$TARGET_ROM_FLOATING_FEATURE" "SEC_FLOATING_FEATURE_GENAI_SUPPORT_REFLECTION_ERASER" "TRUE"
-            UPDATE_FLOATING_FEATURE "$TARGET_ROM_FLOATING_FEATURE" "SEC_FLOATING_FEATURE_GENAI_SUPPORT_SHADOW_ERASER" "TRUE"
-            UPDATE_FLOATING_FEATURE "$TARGET_ROM_FLOATING_FEATURE" "SEC_FLOATING_FEATURE_GENAI_SUPPORT_SMART_LASSO" "TRUE"
-            UPDATE_FLOATING_FEATURE "$TARGET_ROM_FLOATING_FEATURE" "SEC_FLOATING_FEATURE_GENAI_SUPPORT_SPOT_FIXER" "TRUE"
-            UPDATE_FLOATING_FEATURE "$TARGET_ROM_FLOATING_FEATURE" "SEC_FLOATING_FEATURE_GENAI_SUPPORT_STYLE_TRANSFER" "TRUE"
-		fi
+# 	    #========== GENAI ==========#
+# 		if [ -f "$TARGET_ROM_FLOATING_FEATURE" ]; then
+#             UPDATE_FLOATING_FEATURE "$TARGET_ROM_FLOATING_FEATURE" "SEC_FLOATING_FEATURE_GENAI_SUPPORT_IMAGE_CLIPPER" "TRUE"
+#             UPDATE_FLOATING_FEATURE "$TARGET_ROM_FLOATING_FEATURE" "SEC_FLOATING_FEATURE_GENAI_SUPPORT_OBJECT_ERASER" "TRUE"
+#             UPDATE_FLOATING_FEATURE "$TARGET_ROM_FLOATING_FEATURE" "SEC_FLOATING_FEATURE_GENAI_SUPPORT_REFLECTION_ERASER" "TRUE"
+#             UPDATE_FLOATING_FEATURE "$TARGET_ROM_FLOATING_FEATURE" "SEC_FLOATING_FEATURE_GENAI_SUPPORT_SHADOW_ERASER" "TRUE"
+#             UPDATE_FLOATING_FEATURE "$TARGET_ROM_FLOATING_FEATURE" "SEC_FLOATING_FEATURE_GENAI_SUPPORT_SMART_LASSO" "TRUE"
+#             UPDATE_FLOATING_FEATURE "$TARGET_ROM_FLOATING_FEATURE" "SEC_FLOATING_FEATURE_GENAI_SUPPORT_SPOT_FIXER" "TRUE"
+#             UPDATE_FLOATING_FEATURE "$TARGET_ROM_FLOATING_FEATURE" "SEC_FLOATING_FEATURE_GENAI_SUPPORT_STYLE_TRANSFER" "TRUE"
+# 		fi
 
-        cp -rfa "$(pwd)/QuantumROM/Mods/Apps/Samsung_PhotoEditor_AIFull_Android_${ANDROID_VERSION}/." "${EXTRACTED_FIRM_DIR}/"
-    fi
+#         cp -rfa "$(pwd)/QuantumROM/Mods/Apps/Samsung_PhotoEditor_AIFull_Android_${ANDROID_VERSION}/." "${EXTRACTED_FIRM_DIR}/"
+#     fi
 
-    # Fix Samsung AI Photo Editor app Crash.
-    if [ -f "${EXTRACTED_FIRM_DIR}/system/system/cameradata/portrait_data/single_bokeh_feature.json" ]; then
-        sed -i '0,/"ModelType": "MODEL_TYPE_INSTANCE_CAPTURE"/s//"ModelType": "MODEL_TYPE_OBJ_INSTANCE_CAPTURE"/' \
-        "${EXTRACTED_FIRM_DIR}/system/system/cameradata/portrait_data/single_bokeh_feature.json"
-    fi
+#     # Fix Samsung AI Photo Editor app Crash.
+#     if [ -f "${EXTRACTED_FIRM_DIR}/system/system/cameradata/portrait_data/single_bokeh_feature.json" ]; then
+#         sed -i '0,/"ModelType": "MODEL_TYPE_INSTANCE_CAPTURE"/s//"ModelType": "MODEL_TYPE_OBJ_INSTANCE_CAPTURE"/' \
+#         "${EXTRACTED_FIRM_DIR}/system/system/cameradata/portrait_data/single_bokeh_feature.json"
+#     fi
 
-    # ================= OCR DATA PROVIDER =================
-    echo "- Adding Samsung OCR Data Provider."
+#     # ================= OCR DATA PROVIDER =================
+#     echo "- Adding Samsung OCR Data Provider."
 
-    if [ ! -d "${EXTRACTED_FIRM_DIR}/system/system/app/OCRDataProvider" ] && \
-        [ ! -f "$(pwd)/QuantumROM/Mods/Apps/Samsung_OCRDataProvider_Android_${ANDROID_VERSION}.zip" ]; then
+#     if [ ! -d "${EXTRACTED_FIRM_DIR}/system/system/app/OCRDataProvider" ] && \
+#         [ ! -f "$(pwd)/QuantumROM/Mods/Apps/Samsung_OCRDataProvider_Android_${ANDROID_VERSION}.zip" ]; then
 
-		if curl -fsSL --connect-timeout 5 https://www.google.com >/dev/null; then
-            wget --no-check-certificate \
-                "https://github.com/SN-Abdullah-Al-Noman/Samsung_Special/releases/download/Android_${ANDROID_VERSION}/Samsung_OCRDataProvider_Android_${ANDROID_VERSION}.zip" \
-                -O "$(pwd)/QuantumROM/Mods/Apps/Samsung_OCRDataProvider_Android_${ANDROID_VERSION}.zip"
-        else
-            echo "- No internet connection available. Unable to download: Samsung_OCRDataProvider_Android_${ANDROID_VERSION}.zip"
-            return 1
-        fi
-    fi
+# 		if curl -fsSL --connect-timeout 5 https://www.google.com >/dev/null; then
+#             wget --no-check-certificate \
+#                 "https://github.com/SN-Abdullah-Al-Noman/Samsung_Special/releases/download/Android_${ANDROID_VERSION}/Samsung_OCRDataProvider_Android_${ANDROID_VERSION}.zip" \
+#                 -O "$(pwd)/QuantumROM/Mods/Apps/Samsung_OCRDataProvider_Android_${ANDROID_VERSION}.zip"
+#         else
+#             echo "- No internet connection available. Unable to download: Samsung_OCRDataProvider_Android_${ANDROID_VERSION}.zip"
+#             return 1
+#         fi
+#     fi
 
-    if [ ! -d "${EXTRACTED_FIRM_DIR}/system/system/app/OCRDataProvider" ] && \
-        [ -f "$(pwd)/QuantumROM/Mods/Apps/Samsung_OCRDataProvider_Android_${ANDROID_VERSION}.zip" ]; then
+#     if [ ! -d "${EXTRACTED_FIRM_DIR}/system/system/app/OCRDataProvider" ] && \
+#         [ -f "$(pwd)/QuantumROM/Mods/Apps/Samsung_OCRDataProvider_Android_${ANDROID_VERSION}.zip" ]; then
 
-        rm -rf "$(pwd)/QuantumROM/Mods/Apps/Samsung_OCRDataProvider_Android_${ANDROID_VERSION}"
-        unzip -o "$(pwd)/QuantumROM/Mods/Apps/Samsung_OCRDataProvider_Android_${ANDROID_VERSION}.zip" \
-            -d "$(pwd)/QuantumROM/Mods/Apps/Samsung_OCRDataProvider_Android_${ANDROID_VERSION}" >/dev/null 2>&1
+#         rm -rf "$(pwd)/QuantumROM/Mods/Apps/Samsung_OCRDataProvider_Android_${ANDROID_VERSION}"
+#         unzip -o "$(pwd)/QuantumROM/Mods/Apps/Samsung_OCRDataProvider_Android_${ANDROID_VERSION}.zip" \
+#             -d "$(pwd)/QuantumROM/Mods/Apps/Samsung_OCRDataProvider_Android_${ANDROID_VERSION}" >/dev/null 2>&1
 
-	    #============= OCR ==========#
-        sed -i '/SEC_FLOATING_FEATURE_CAMERA_CONFIG_OCR_ENGINE_UNSUPPORT /d' "$TARGET_ROM_FLOATING_FEATURE"
-        UPDATE_FLOATING_FEATURE "$TARGET_ROM_FLOATING_FEATURE" "SEC_FLOATING_FEATURE_CAMERA_CONFIG_STRIDE_OCR_VERSION" "V2"
+# 	    #============= OCR ==========#
+#         sed -i '/SEC_FLOATING_FEATURE_CAMERA_CONFIG_OCR_ENGINE_UNSUPPORT /d' "$TARGET_ROM_FLOATING_FEATURE"
+#         UPDATE_FLOATING_FEATURE "$TARGET_ROM_FLOATING_FEATURE" "SEC_FLOATING_FEATURE_CAMERA_CONFIG_STRIDE_OCR_VERSION" "V2"
 
-        cp -rfa "$(pwd)/QuantumROM/Mods/Apps/Samsung_OCRDataProvider_Android_${ANDROID_VERSION}/." "${EXTRACTED_FIRM_DIR}/"
+#         cp -rfa "$(pwd)/QuantumROM/Mods/Apps/Samsung_OCRDataProvider_Android_${ANDROID_VERSION}/." "${EXTRACTED_FIRM_DIR}/"
 
-		if [ ! -d "${EXTRACTED_FIRM_DIR}/system/system/app/OCRDataProvider" ]; then
-	        cp -rfa "$(pwd)/QuantumROM/Mods/Apps/OCR/." "${EXTRACTED_FIRM_DIR}/"
-        fi
-    fi
+# 		if [ ! -d "${EXTRACTED_FIRM_DIR}/system/system/app/OCRDataProvider" ]; then
+# 	        cp -rfa "$(pwd)/QuantumROM/Mods/Apps/OCR/." "${EXTRACTED_FIRM_DIR}/"
+#         fi
+#     fi
 
-    # ================= IMPORTANT APPS =================
-	echo "- Adding Samsung Important Apps."
+#     # ================= IMPORTANT APPS =================
+# 	echo "- Adding Samsung Important Apps."
 
-    if [ ! -f "$(pwd)/QuantumROM/Mods/Apps/Samsung_Important_Apps_Android_${ANDROID_VERSION}.zip" ]; then
-        if curl -fsSL --connect-timeout 5 https://www.google.com >/dev/null; then
-            wget --no-check-certificate \
-                "https://github.com/SN-Abdullah-Al-Noman/Samsung_Special/releases/download/Android_${ANDROID_VERSION}/Samsung_Important_Apps_Android_${ANDROID_VERSION}.zip" \
-               -O "$(pwd)/QuantumROM/Mods/Apps/Samsung_Important_Apps_Android_${ANDROID_VERSION}.zip"
-        else
-            echo "No internet connection available. Unable to download: Samsung_Important_Apps_Android_${ANDROID_VERSION}.zip"
-            return 1
-        fi
-    fi
+#     if [ ! -f "$(pwd)/QuantumROM/Mods/Apps/Samsung_Important_Apps_Android_${ANDROID_VERSION}.zip" ]; then
+#         if curl -fsSL --connect-timeout 5 https://www.google.com >/dev/null; then
+#             wget --no-check-certificate \
+#                 "https://github.com/SN-Abdullah-Al-Noman/Samsung_Special/releases/download/Android_${ANDROID_VERSION}/Samsung_Important_Apps_Android_${ANDROID_VERSION}.zip" \
+#                -O "$(pwd)/QuantumROM/Mods/Apps/Samsung_Important_Apps_Android_${ANDROID_VERSION}.zip"
+#         else
+#             echo "No internet connection available. Unable to download: Samsung_Important_Apps_Android_${ANDROID_VERSION}.zip"
+#             return 1
+#         fi
+#     fi
 
-    if [ -s "$(pwd)/QuantumROM/Mods/Apps/Samsung_Important_Apps_Android_${ANDROID_VERSION}.zip" ]; then
-        rm -rf "$(pwd)/QuantumROM/Mods/Apps/Samsung_Important_Apps_Android_${ANDROID_VERSION}"
-        unzip -o "$(pwd)/QuantumROM/Mods/Apps/Samsung_Important_Apps_Android_${ANDROID_VERSION}.zip" \
-            -d "$(pwd)/QuantumROM/Mods/Apps/Samsung_Important_Apps_Android_${ANDROID_VERSION}" >/dev/null 2>&1
+#     if [ -s "$(pwd)/QuantumROM/Mods/Apps/Samsung_Important_Apps_Android_${ANDROID_VERSION}.zip" ]; then
+#         rm -rf "$(pwd)/QuantumROM/Mods/Apps/Samsung_Important_Apps_Android_${ANDROID_VERSION}"
+#         unzip -o "$(pwd)/QuantumROM/Mods/Apps/Samsung_Important_Apps_Android_${ANDROID_VERSION}.zip" \
+#             -d "$(pwd)/QuantumROM/Mods/Apps/Samsung_Important_Apps_Android_${ANDROID_VERSION}" >/dev/null 2>&1
 
-        cp -rfa "$(pwd)/QuantumROM/Mods/Apps/Samsung_Important_Apps_Android_${ANDROID_VERSION}/." "${EXTRACTED_FIRM_DIR}/"
-    fi
+#         cp -rfa "$(pwd)/QuantumROM/Mods/Apps/Samsung_Important_Apps_Android_${ANDROID_VERSION}/." "${EXTRACTED_FIRM_DIR}/"
+#     fi
 
-    chown -R "$REAL_USER:$REAL_USER" "$EXTRACTED_FIRM_DIR"
-    chmod -R u+rwX "$EXTRACTED_FIRM_DIR"
-}
+#     chown -R "$REAL_USER:$REAL_USER" "$EXTRACTED_FIRM_DIR"
+#     chmod -R u+rwX "$EXTRACTED_FIRM_DIR"
+# }
 
 
 APPLY_CUSTOM_FEATURES() {
@@ -2287,7 +2292,7 @@ APPLY_CUSTOM_FEATURES() {
 
 	local EXTRACTED_FIRM_DIR="$1"
 
-	echo -e "Applying usefull features."
+	echo -e "Applying useful features."
 
     if [ -d "$(pwd)/QuantumROM/usefull_things" ]; then
         cp -a "$(pwd)/QuantumROM/usefull_things/." "$(pwd)/OUT"
@@ -2303,8 +2308,7 @@ APPLY_CUSTOM_FEATURES() {
     BUILD_PROP "$EXTRACTED_FIRM_DIR" "system" "fw.max_users" "5"
     BUILD_PROP "$EXTRACTED_FIRM_DIR" "system" "fw.show_multiuserui" "1"
     BUILD_PROP "$EXTRACTED_FIRM_DIR" "system" "wifi.interface=" "wlan0"
-    BUILD_PROP "$EXTRACTED_FIRM_DIR" "system" "wlan.wfd.hdcp" "disabled"
-	BUILD_PROP "$EXTRACTED_FIRM_DIR" "system" "ro.telephony.sim_slots.count" "2"
+    BUILD_PROP "$EXTRACTED_FIRM_DIR" "system" "wlan.wfd.hdcp" "disable"
 	BUILD_PROP "$EXTRACTED_FIRM_DIR" "system" "ro.surface_flinger.protected_contents" "true"
 	BUILD_PROP "$EXTRACTED_FIRM_DIR" "product" "ro.product.locale" "en-US"
 
