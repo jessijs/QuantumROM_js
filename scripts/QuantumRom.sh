@@ -164,6 +164,8 @@ DOWNLOAD_FIRMWARE() {
     local IMEI="$3"
     local DOWN_DIR="${4}/$MODEL"
 
+	local TARGET_VERSION="X210XXS9DYJ5"
+
     rm -rf "$DOWN_DIR"
     mkdir -p "$DOWN_DIR"
 
