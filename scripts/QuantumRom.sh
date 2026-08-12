@@ -172,7 +172,7 @@ DOWNLOAD_FIRMWARE() {
     echo -e "======================================"
     echo -e "MODEL: $MODEL | CSC: $CSC"
 
-    VERSION=$(python3 -m samloader -m "$MODEL" -r "$CSC" -i "$IMEI" checkupdate 2>&1)
+    VERSION=$(python3 -m samloader -m "$MODEL" -r "$CSC" -s "$SERIAL" checkupdate 2>&1)
 
     if [ $? -ne 0 ] || [ -z "$VERSION" ]; then
         echo -e "⛔️ MODEL/CSC/IMEI not valid or no update found."
@@ -185,9 +185,9 @@ DOWNLOAD_FIRMWARE() {
     fi
 
     # --- Step 2: Download Firmware ---
-    python3 -m samloader -m "$MODEL" -r "$CSC" -i "$IMEI" download -O "$DOWN_DIR"
+    python3 -m samloader -m "$MODEL" -r "$CSC" -s "$SERIAL" download -O "$DOWN_DIR"
     if [ $? -ne 0 ]; then
-        echo -e "⛔️ Download failed. Check IMEI/MODEL/CSC."
+        echo -e "⛔️ Download failed. Check SERIAL/MODEL/CSC."
         exit 1
     fi
 
@@ -197,7 +197,6 @@ DOWNLOAD_FIRMWARE() {
     local file_size=$(du -m "${DOWN_DIR}"/${MODEL}_*_fac.zip 2>/dev/null | cut -f1)
     echo -e "Firmware Size: ${file_size} MB"
 }
-
 
 EXTRACT_FIRMWARE() {
     echo " "
