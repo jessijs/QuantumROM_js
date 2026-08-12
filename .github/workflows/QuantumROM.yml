@@ -69,17 +69,17 @@ jobs:
 
       - name: Download firmware ▶️ ${{ github.event.inputs.TARGET_DEVICE }} - ${{ github.event.inputs.TARGET_DEVICE_CSC }}
         run: |
-          source scripts/QuantumRom-serial.sh
+          source scripts/QuantumRom.sh
           DOWNLOAD_FIRMWARE "${{ github.event.inputs.TARGET_DEVICE }}" "${{ github.event.inputs.TARGET_DEVICE_CSC }}" "${{ github.event.inputs.TARGET_DEVICE_SERIAL }}" "FW" "${{ github.event.inputs.TARGET_FW_VERSION }}"
 
       - name: Extract firmware
         run: |
-          source scripts/QuantumRom-serial.sh
+          source scripts/QuantumRom.sh
           EXTRACT_FIRMWARE "FW/${{ github.event.inputs.TARGET_DEVICE }}"
 
       - name: Start Rom Build For ${{ github.event.inputs.STOCK_DEVICE }}
         run: |
-          sudo bash runserial.sh \
+          sudo bash run.sh \
             "${{ github.event.inputs.STOCK_DEVICE }}" \
             "${{ github.event.inputs.USE_UI_8_TETHERING_APEX }}" \
             "${{ github.event.inputs.TARGET_DEVICE }}" \
