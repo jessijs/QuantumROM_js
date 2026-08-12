@@ -22,7 +22,7 @@ on:
       TARGET_DEVICE_IMEI:
         description: "TARGET_DEVICE_IMEI."
         required: false
-        default: "R9XX206M4WE"
+        default: ""
       OUTPUT_FILESYSTEM:
         description: "OUTPUT_FILESYSTEM. e.g erofs / ext4 / f2fs"
         required: true
