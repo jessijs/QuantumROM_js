@@ -164,57 +164,40 @@ DOWNLOAD_FIRMWARE() {
     local IMEI="$3"
     local DOWN_DIR="${4}/$MODEL"
 
-    # =========================================================================
-    # TRAVA MANUAL PARA A ONEUI 7 (Android 15)
-    # =========================================================================
-    local TARGET_VERSION="X210XXS9DYJ5"
-
     rm -rf "$DOWN_DIR"
     mkdir -p "$DOWN_DIR"
 
     echo -e "======================================"
-    echo -e "   Samsung FW Downloader (OneUI 7 Locked) "
+    echo -e "  Samsung FW Downloader   "
     echo -e "======================================"
     echo -e "MODEL: $MODEL | CSC: $CSC"
 
-    if [ -n "$TARGET_VERSION" ]; then
-        VERSION="$TARGET_VERSION"
-        echo -e "⚠️ Manual Version Lock Enabled: $VERSION"
-    else
-        echo -e "Checking latest available update..."
-        VERSION=$(python3 -m samloader -m "$MODEL" -r "$CSC" -s "$IMEI" checkupdate 2>&1)
+    VERSION=$(python3 -m samloader -m "$MODEL" -r "$CSC" -s "$IMEI" checkupdate 2>&1)
 
-        if [ $? -ne 0 ] || [ -z "$VERSION" ]; then
-            echo -e "⛔️ MODEL/CSC/IMEI not valid or no update found."
-            echo -e "Error: $VERSION"
-            return 1
-        fi
+    if [ $? -ne 0 ] || [ -z "$VERSION" ]; then
+        echo -e "⛔️ MODEL/CSC/IMEI not valid or no update found."
+        echo -e "Error: $VERSION"
+        return 1
     fi
 
     if [ -n "$GITHUB_ENV" ]; then
         echo "VERSION=$VERSION" >> "$GITHUB_ENV"
     fi
 
-    # --- Step 2: Download Firmware com suporte à versão específica (-v) ---
-    if [ -n "$TARGET_VERSION" ]; then
-        echo -e "Downloading specific version using flag -v..."
-        python3 -m samloader -m "$MODEL" -r "$CSC" -s "$IMEI" download -v "$TARGET_VERSION" -O "$DOWN_DIR"
-    else
-        echo -e "Downloading latest version..."
-        python3 -m samloader -m "$MODEL" -r "$CSC" -s "$IMEI" download -O "$DOWN_DIR"
-    fi
-
+    # --- Step 2: Download Firmware ---
+    python3 -m samloader -m "$MODEL" -r "$CSC" -s "$IMEI" download -O "$DOWN_DIR"
     if [ $? -ne 0 ]; then
-        echo -e "⛔️ Download failed. Check SERIAL/MODEL/CSC/Version string."
+        echo -e "⛔️ Download failed. Check SERIAL/MODEL/CSC."
         exit 1
     fi
 
-    find "$DOWN_DIR" -type f -name "*.zip.enc*" -delete
+	find "$DOWN_DIR" -type f -name "*.zip.enc*" -delete
 
     # --- Show Firmware Info ---
     local file_size=$(du -m "${DOWN_DIR}"/${MODEL}_*_fac.zip 2>/dev/null | cut -f1)
     echo -e "Firmware Size: ${file_size} MB"
 }
+
 
 EXTRACT_FIRMWARE() {
     echo " "
